@@ -47,7 +47,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .co-sym{font-size:4rem;animation:coRing 1s ease-in-out infinite;}
 @keyframes coRing{0%,100%{transform:rotate(0);}15%{transform:rotate(-18deg);}30%{transform:rotate(18deg);}45%{transform:rotate(-10deg);}60%{transform:rotate(10deg);}75%{transform:rotate(-5deg);}90%{transform:rotate(5deg);}}
 .co-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;letter-spacing:2px;}
-.co-type{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:3px;opacity:.8;color:var(--accent);}
+.co-type{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;opacity:.6;}
 .co-btns{display:flex;gap:16px;}
 .co-accept{padding:14px 28px;border-radius:99px;border:1px solid rgba(77,227,125,.4);background:rgba(77,227,125,.18);color:#4de37d;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;cursor:pointer;transition:all .15s;}
 .co-accept:active{background:rgba(77,227,125,.35);}
@@ -90,8 +90,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .ch-actions{margin-left:auto;display:flex;gap:6px;}
 .ch-btn{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;transition:all .15s;font-family:'Share Tech Mono',monospace;font-size:9px;}
 .ch-btn:active{background:rgba(255,255,255,.08);}
-.ch-btn.calling{border-color:var(--safe);color:var(--safe);animation:callPulse 1.5s infinite;}
+
+/* CALL BARS (NEW FEATURE) */
+.call-bar {display:flex;gap:10px;padding:12px;background:rgba(6,14,28,.9);border-bottom:1px solid var(--border);flex-shrink:0;justify-content:center;box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.call-btn {flex:1;padding:12px;border-radius:8px;border:1px solid var(--accent);background:rgba(0,212,255,.05);color:var(--accent);font-family:'Syne',sans-serif;font-weight:800;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.call-btn:active {background:rgba(0,212,255,.15);transform:scale(0.98);}
+.call-btn.calling {border-color:var(--safe);color:var(--bg);background:var(--safe);animation:callPulse 1.5s infinite;}
 @keyframes callPulse{0%,100%{box-shadow:0 0 0 0 rgba(77,227,125,.4);}50%{box-shadow:0 0 0 6px rgba(77,227,125,0);}}
+
 .msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:7px;-webkit-overflow-scrolling:touch;}
 .msgs::-webkit-scrollbar{width:2px;}
 .msgs::-webkit-scrollbar-thumb{background:var(--border);}
@@ -142,9 +148,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .ag-online{width:8px;height:8px;border-radius:50%;flex-shrink:0;opacity:.25;transition:all .3s;}
 .ag-online.on{opacity:1;box-shadow:0 0 6px currentColor;}
 
-/* CALL BUBBLE (DIUBAH AGAR JELAS & TIDAK MENGHALANGI) */
-#callBub{position:fixed;top:70px;right:16px;padding:12px 20px;border-radius:30px;background:var(--danger);display:none;align-items:center;justify-content:center;gap:8px;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:#fff;z-index:9000;border:2px solid rgba(255,255,255,.3);box-shadow:0 0 24px var(--danger);cursor:pointer;animation:callPulse 1.5s infinite;}
-#callBub:active{transform:scale(0.95);}
+/* CALL BUBBLE */
+#callBub{position:fixed;bottom:20px;right:16px;width:64px;height:64px;border-radius:50%;background:var(--safe);display:none;align-items:center;justify-content:center;font-size:20px;z-index:8000;border:3px solid rgba(255,255,255,.3);box-shadow:0 0 24px var(--safe);cursor:pointer;animation:callPulse 1.5s infinite;}
 </style>
 </head>
 <body>
@@ -171,7 +176,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   </div>
 </div>
 
-<div id="callBub" onclick="IS.endCall()">📵 AKHIRI PANGGILAN</div>
+<div id="callBub" onclick="IS.endCall()">📵</div>
 
 <div class="scr scr-center act" id="scrLogin">
   <div class="login-box">
@@ -200,7 +205,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
     <div class="chat-panel" id="panelGroup">
       <div class="chat-header">
         <div><div class="ch-name">⬡ INSIGNIA SIX</div><div class="ch-status" id="groupStatus">Group · 0 online</div></div>
-        <div class="ch-actions"><button class="ch-btn" id="btnGroupVoice" onclick="IS.call('group',false)">📞 CALL</button></div>
+      </div>
+      <div class="call-bar">
+        <button class="call-btn" id="btnGroupVoice" onclick="IS.call('group',false)">📞 PANGGILAN GRUB</button>
       </div>
       <div class="msgs" id="msgsGroup"></div>
       <div class="typing-bar" id="typGroup"></div>
@@ -219,10 +226,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
       <div class="chat-header">
         <button class="ch-btn" onclick="IS.openPanel('agents')" style="margin-right:4px;">←</button>
         <div><div class="ch-name" id="dmName">—</div><div class="ch-status" id="dmStatus">—</div></div>
-        <div class="ch-actions">
-          <button class="ch-btn" id="btnDMVoice" onclick="IS.call('dm',false)">📞</button>
-          <button class="ch-btn" id="btnDMVideo" onclick="IS.call('dm',true)">📹</button>
-        </div>
+      </div>
+      <div class="call-bar">
+        <button class="call-btn" id="btnDMVoice" onclick="IS.call('dm',false)">📞 PANGGILAN PRIBADI</button>
+        <button class="call-btn" id="btnDMVideo" onclick="IS.call('dm',true)">📹 VIDEO CALL</button>
       </div>
       <div class="msgs" id="msgsDM"></div>
       <div class="typing-bar" id="typDM"></div>
@@ -298,7 +305,6 @@ let ME=null, presRef=null, peer=null, activeCalls=[], localStream=null;
 let typTimers={}, msgCounts={group:0, dm:0}, dmTarget=null, watchId=null, myPos=null;
 let currentAudio=null, pendingCall=null;
 
-// Listener References for Clean Cleanup
 let unsubChat = { group: null, dm: null };
 let unsubTyping = { group: null, dm: null };
 
@@ -347,7 +353,7 @@ function showCallOverlay(callerKey, callType, onAccept, onDecline) {
   document.getElementById('coType').textContent = callType;
   document.getElementById('callOverlay').classList.add('show');
   
-  playAudio(RINGTONE[callerKey], true); // Play ringtone caller
+  playAudio(RINGTONE[callerKey], true); 
 
   document.getElementById('coAccept').onclick = () => {
     document.getElementById('callOverlay').classList.remove('show');
@@ -423,13 +429,14 @@ const IS = window.IS = {
     IS.buildAgentsList();
     IS.startGPS();
     IS.initPeer();
-    if('Notification' in window && Notification.permission!=='granted') Notification.requestPermission();
+    
+    if('Notification' in window && Notification.permission==='default') Notification.requestPermission();
     IS.openPanel('group');
   },
 
   listenChat(type,path,boxId,badgeId){
-    if (unsubChat[type]) unsubChat[type](); // Cleanup old listener
-    document.getElementById(boxId).innerHTML = ''; // Reset chat window
+    if (unsubChat[type]) unsubChat[type](); 
+    document.getElementById(boxId).innerHTML = ''; 
 
     const q=query(ref(db,path),orderByChild('ts'),limitToLast(80));
     unsubChat[type] = onChildAdded(q,snap=>{
@@ -446,15 +453,14 @@ const IS = window.IS = {
         if(!isVisible) document.getElementById(badgeId)?.classList.add('show');
         toast(`${AG[m.sender]?.sym||''} ${m.sender}: ${m.text.substring(0,38)}`,AG[m.sender]?.color);
         
-        // Sound Routing
         if(type==='dm') playAudio(DM_SOUND[m.sender]);
         else playAudio(DM_SOUND[m.sender]);
 
-        // Background Notification Check (Jika tab disembunyikan/minimize)
-        if(document.hidden && Notification.permission==='granted'){
-          new Notification(`${type==='dm'?'🔒 DM':'⬡ GROUP'} ${m.sender} · Insignia Six`,{
-            body: m.text.substring(0,80),
-            requireInteraction: false // Pesan chat tidak perlu ditahan
+        // FITUR BACKGROUND NOTIFIKASI
+        if((document.hidden || !document.hasFocus()) && Notification.permission==='granted'){
+          new Notification(`${type==='dm'?'🔒 DM':'⬡ GROUP'} ${m.sender} · Insignia Six`, {
+              body: m.text.substring(0, 80),
+              requireInteraction: true
           });
         }
       }
@@ -509,7 +515,6 @@ const IS = window.IS = {
 
   openPanel(name){
     ['group','agents','dm','radar'].forEach(p=>{
-      // Perbaikan Mapping Penamaan ID HTML agar panel DM bisa muncul sempurna
       const idName = p === 'dm' ? 'panelDM' : 'panel' + p.charAt(0).toUpperCase() + p.slice(1);
       const el=document.getElementById(idName);
       if(el) el.style.display=p===name?'flex':'none';
@@ -522,7 +527,6 @@ const IS = window.IS = {
     if(name==='dm'||name==='agents') document.getElementById('badgeAgents')?.classList.remove('show');
     if(name==='radar') IS.renderRadar();
 
-    // Pastikan scroll ke bawah setiap pindah panel chat
     setTimeout(() => {
         const box = document.getElementById(name === 'dm' ? 'msgsDM' : 'msgsGroup');
         if (box) box.scrollTop = box.scrollHeight;
@@ -617,34 +621,35 @@ const IS = window.IS = {
       peer.on('call',call=>{
         const caller=call.metadata?.caller||'UNKNOWN';
         const isVideo=call.metadata?.video||false;
-        const callTypeStr = call.metadata?.type === 'group' ? 'GROUP' : 'PRIVATE';
         pendingCall=call;
 
-        // Background Notification untuk telepon (requireInteraction true agar tidak hilang sendiri)
-        if (document.hidden && Notification.permission === 'granted') {
+        // FITUR BACKGROUND NOTIFIKASI TELEPON
+        if ((document.hidden || !document.hasFocus()) && Notification.permission === 'granted') {
             new Notification(`⚠️ PANGGILAN MASUK: ${caller}`, { 
-                body: `Incoming ${callTypeStr} ${isVideo ? 'Video' : 'Voice'} Call System`,
+                body: isVideo ? 'Video Call System' : 'Voice Call System',
                 requireInteraction: true 
             });
         }
 
-        const displayCallType = `${isVideo?'📹 VIDEO':'📞 VOICE'} — ${callTypeStr} CALL`;
-
         showCallOverlay(
           caller,
-          displayCallType,
-          ()=>{ // Accept
+          isVideo?'📹 VIDEO CALL':'📞 VOICE CALL',
+          ()=>{ 
             navigator.mediaDevices.getUserMedia({audio:true,video:isVideo}).then(stream=>{
               localStream=stream; call.answer(stream);
               call.on('stream',r=>IS.attachRemote(r));
               call.on('close',()=>IS.removeCall(call));
               activeCalls.push(call);
               document.getElementById('callBub').style.display='flex';
-              document.getElementById('btnGroupVoice').classList.add('calling');
+              
+              const btnId = call.metadata?.group ? 'btnGroupVoice' : (isVideo ? 'btnDMVideo' : 'btnDMVoice');
+              const btn = document.getElementById(btnId);
+              if(btn) btn.classList.add('calling');
+              
               toast(`🟢 CONNECTED: ${caller}`,AG[caller]?.color||'var(--safe)');
             }).catch(()=>toast('❌ Mic denied','var(--danger)'));
           },
-          ()=>{ try{call.close();}catch(e){} pendingCall=null; } // Decline
+          ()=>{ try{call.close();}catch(e){} pendingCall=null; } 
         );
       });
       peer.on('error',e=>log('PEER ERR: '+e.type,true));
@@ -657,13 +662,12 @@ const IS = window.IS = {
     
     navigator.mediaDevices.getUserMedia({audio:true,video:isVideo}).then(stream=>{
       localStream=stream;
-      playAudio(RINGTONE[ME],true); // Outgoing ring
+      playAudio(RINGTONE[ME],true); 
       let connectedCount = 0;
 
       targets.forEach(k=>{
         try{
-          // Menambahkan tipe panggilan ke metadata agar penerima tahu ini grup atau DM
-          const c=peer.call('IS91_'+k,stream,{metadata:{caller:ME,video:isVideo, type:type}});
+          const c=peer.call('IS91_'+k,stream,{metadata:{caller:ME,video:isVideo,group:type==='group'}});
           if(!c) return;
           activeCalls.push(c);
           c.on('stream',r=>{
@@ -671,7 +675,9 @@ const IS = window.IS = {
             connectedCount++;
             IS.attachRemote(r);
             document.getElementById('callBub').style.display='flex';
-            document.getElementById('btnGroupVoice').classList.add('calling');
+            
+            const btnId = type === 'group' ? 'btnGroupVoice' : (isVideo ? 'btnDMVideo' : 'btnDMVoice');
+            document.getElementById(btnId).classList.add('calling');
           });
           c.on('close',()=>IS.removeCall(c));
           c.on('error',()=>{});
@@ -700,7 +706,12 @@ const IS = window.IS = {
     if(localStream){localStream.getTracks().forEach(t=>t.stop()); localStream=null;}
     pendingCall=null;
     document.getElementById('callBub').style.display='none';
-    document.getElementById('btnGroupVoice').classList.remove('calling');
+    
+    ['btnGroupVoice', 'btnDMVoice', 'btnDMVideo'].forEach(id => {
+      const btn = document.getElementById(id);
+      if(btn) btn.classList.remove('calling');
+    });
+
     document.querySelectorAll('[id^="ra-"]').forEach(a=>a.remove());
     toast('📵 CALL ENDED','var(--danger)');
   },
